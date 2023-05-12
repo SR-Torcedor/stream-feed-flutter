@@ -24,8 +24,8 @@ class StreamHttpClient {
   })  : options = options ?? const StreamHttpClientOptions(),
         httpClient = dio ?? Dio() {
     httpClient
-      ..options.receiveTimeout = this.options.receiveTimeout.inMilliseconds
-      ..options.connectTimeout = this.options.connectTimeout.inMilliseconds
+      ..options.receiveTimeout = this.options.receiveTimeout
+      ..options.connectTimeout = this.options.connectTimeout
       ..options.queryParameters = {
         'api_key': apiKey,
         'location': this.options.group,
@@ -83,8 +83,7 @@ class StreamHttpClient {
   }
 
   /// Combines the base url with the [relativeUrl]
-  String enrichUrl(String relativeUrl, String serviceName) =>
-      '${options._getBaseUrl(serviceName)}/$relativeUrl';
+  String enrichUrl(String relativeUrl, String serviceName) => '${options._getBaseUrl(serviceName)}/$relativeUrl';
 
   /// Handy method to make an http GET request with error parsing.
   Future<Response<T>> get<T>(

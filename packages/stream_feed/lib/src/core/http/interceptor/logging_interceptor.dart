@@ -105,8 +105,7 @@ class LoggingInterceptor extends Interceptor {
           final formDataMap = <String, dynamic>{}
             ..addEntries(data.fields)
             ..addEntries(data.files);
-          _printMapAsTable(_logPrintRequest, formDataMap,
-              header: 'Form data | ${data.boundary}');
+          _printMapAsTable(_logPrintRequest, formDataMap, header: 'Form data | ${data.boundary}');
         } else {
           _printBlock(_logPrintRequest, data.toString());
         }
@@ -118,12 +117,11 @@ class LoggingInterceptor extends Interceptor {
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) {
     if (error) {
-      if (err.type == DioErrorType.response) {
+      if (err.type == DioErrorType.badResponse) {
         final uri = err.response?.requestOptions.uri;
         _printBoxed(
           _logPrintError,
-          header:
-              'DioError ║ Status: ${err.response?.statusCode} ${err.response?.statusMessage}',
+          header: 'DioError ║ Status: ${err.response?.statusCode} ${err.response?.statusMessage}',
           text: uri.toString(),
         );
         if (err.response != null && err.response?.data != null) {
@@ -149,8 +147,7 @@ class LoggingInterceptor extends Interceptor {
     _printResponseHeader(_logPrintResponse, response);
     if (responseHeader) {
       final responseHeaders = <String, String>{};
-      response.headers
-          .forEach((k, list) => responseHeaders[k] = list.toString());
+      response.headers.forEach((k, list) => responseHeaders[k] = list.toString());
       _printMapAsTable(_logPrintResponse, responseHeaders, header: 'Headers');
     }
 
@@ -194,22 +191,18 @@ class LoggingInterceptor extends Interceptor {
     final method = response.requestOptions.method;
     _printBoxed(
       logPrint,
-      header:
-          'Response ║ $method ║ Status: ${response.statusCode} ${response.statusMessage}',
+      header: 'Response ║ $method ║ Status: ${response.statusCode} ${response.statusMessage}',
       text: uri.toString(),
     );
   }
 
-  void _printRequestHeader(
-      void Function(Object) logPrint, RequestOptions options) {
+  void _printRequestHeader(void Function(Object) logPrint, RequestOptions options) {
     final uri = options.uri;
     final method = options.method;
     _printBoxed(logPrint, header: 'Request ║ $method ', text: uri.toString());
   }
 
-  void _printLine(void Function(Object) logPrint,
-          [String pre = '', String suf = '╝']) =>
-      logPrint('$pre${'═' * maxWidth}$suf');
+  void _printLine(void Function(Object) logPrint, [String pre = '', String suf = '╝']) => logPrint('$pre${'═' * maxWidth}$suf');
 
   void _printKV(void Function(Object) logPrint, String? key, Object? v) {
     final pre = '╟ $key: ';
@@ -226,9 +219,7 @@ class LoggingInterceptor extends Interceptor {
   void _printBlock(void Function(Object) logPrint, String msg) {
     final lines = (msg.length / maxWidth).ceil();
     for (var i = 0; i < lines; ++i) {
-      logPrint((i >= 0 ? '║ ' : '') +
-          msg.substring(i * maxWidth,
-              math.min<int>(i * maxWidth + maxWidth, msg.length)));
+      logPrint((i >= 0 ? '║ ' : '') + msg.substring(i * maxWidth, math.min<int>(i * maxWidth + maxWidth, msg.length)));
     }
   }
 
@@ -301,8 +292,7 @@ class LoggingInterceptor extends Interceptor {
         if (compact) {
           logPrint('║${_indent(tabs)}  $e${!isLast ? ',' : ''}');
         } else {
-          _printPrettyMap(logPrint, e,
-              tabs: tabs + 1, isListItem: true, isLast: isLast);
+          _printPrettyMap(logPrint, e, tabs: tabs + 1, isListItem: true, isLast: isLast);
         }
       } else {
         logPrint('║${_indent(tabs + 2)} $e${isLast ? '' : ','}');
@@ -317,16 +307,13 @@ class LoggingInterceptor extends Interceptor {
   }) {
     if (map == null || map.isEmpty) return;
     logPrint('╔ $header ');
-    map.forEach((dynamic key, dynamic value) =>
-        _printKV(logPrint, key.toString(), value));
+    map.forEach((dynamic key, dynamic value) => _printKV(logPrint, key.toString(), value));
     _printLine(logPrint, '╚');
   }
 
-  void _logPrintRequest(Object object) =>
-      logPrint(InterceptStep.request, object);
+  void _logPrintRequest(Object object) => logPrint(InterceptStep.request, object);
 
-  void _logPrintResponse(Object object) =>
-      logPrint(InterceptStep.response, object);
+  void _logPrintResponse(Object object) => logPrint(InterceptStep.response, object);
 
   void _logPrintError(Object object) => logPrint(InterceptStep.error, object);
 }
