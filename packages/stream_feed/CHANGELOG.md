@@ -1,3 +1,6 @@
+## 0.6.1+3: 12/05/2023
+- add support to Flutter 3.10
+
 ## 0.6.0+2: 27/05/2022
 - bumb version in sdk header
 
